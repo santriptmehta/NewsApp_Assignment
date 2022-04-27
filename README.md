@@ -1,10 +1,14 @@
 # NewsApp
 
 
-[*] Retrofit
-[*] Coroutines
-[*] ViewModel
-[*] Live Data
-[*] View Binding
-[*] Recycler View
-[*] Splash Screen
+[*] Retrofit </br>
+[*] Coroutines</br>
+[*] ViewModel</br>
+[*] Live Data</br>
+[*] View Binding</br>
+[*] Recycler View</br>
+[*] Splash Screen</br>
+
+# Splash and News app images
+
+
