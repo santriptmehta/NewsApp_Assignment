@@ -1,11 +1,16 @@
 package com.binarybeast.newsfog
 
+import android.content.Context
+import android.content.DialogInterface
+import android.content.Intent
+import android.net.ConnectivityManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationItemView
@@ -22,6 +27,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        CheckConnectivity()
 
         recyclerView = findViewById(R.id.recycler_view)
         head_title = findViewById(R.id.general_title)
@@ -46,6 +52,7 @@ class MainActivity : AppCompatActivity() {
                         }
 
                         override fun onFailure(call: Call<News>, t: Throwable) {
+                            CheckConnectivity()
                             Toast.makeText(applicationContext,"Something went wrong",Toast.LENGTH_LONG).show()
                         }
 
@@ -65,6 +72,7 @@ class MainActivity : AppCompatActivity() {
                         }
 
                         override fun onFailure(call: Call<News>, t: Throwable) {
+                            CheckConnectivity()
                             Toast.makeText(applicationContext,"Something went wrong",Toast.LENGTH_LONG).show()
                         }
 
@@ -83,6 +91,7 @@ class MainActivity : AppCompatActivity() {
                         }
 
                         override fun onFailure(call: Call<News>, t: Throwable) {
+                            CheckConnectivity()
                             Toast.makeText(applicationContext,"Something went wrong",Toast.LENGTH_LONG).show()
                         }
 
@@ -101,6 +110,7 @@ class MainActivity : AppCompatActivity() {
                         }
 
                         override fun onFailure(call: Call<News>, t: Throwable) {
+                            CheckConnectivity()
                             Toast.makeText(applicationContext,"Something went wrong",Toast.LENGTH_LONG).show()
                         }
 
@@ -108,7 +118,9 @@ class MainActivity : AppCompatActivity() {
 
                 }
                 R.id.nav_All ->{
+
                     head_title.text = "Discovery"
+
                     val techBtn = NewsService.newsInstance.fetchHeadlines("in","general",Constant.API_KEY)
                     techBtn.enqueue(object : Callback<News>{
                         override fun onResponse(call: Call<News>, response: Response<News>) {
@@ -120,6 +132,7 @@ class MainActivity : AppCompatActivity() {
                         }
 
                         override fun onFailure(call: Call<News>, t: Throwable) {
+                            CheckConnectivity()
                             Toast.makeText(applicationContext,"Something went wrong",Toast.LENGTH_LONG).show()
                         }
 
@@ -151,6 +164,30 @@ class MainActivity : AppCompatActivity() {
             }
 
         })
+    }
+
+    private fun CheckConnectivity(){
+        val manager = this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val activeNetwork = manager.activeNetworkInfo
+
+        if(null == activeNetwork){
+            val dialogBuilder = AlertDialog.Builder(this)
+            val intent = Intent(this, MainActivity::class.java)
+
+            dialogBuilder.setMessage("Please connect to the internet and then Retry .")
+                .setCancelable(false)
+                .setPositiveButton("Retry", DialogInterface.OnClickListener { dialog, id ->
+                    recreate()
+                })
+                .setNegativeButton("Cancel", DialogInterface.OnClickListener { dialog, id ->
+                    finish()
+                })
+
+            val alert = dialogBuilder.create()
+            alert.setTitle("No internet Connection")
+            alert.show()
+        }
+
     }
 
 }
